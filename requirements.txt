@@ -1,5 +1,5 @@
 # Runtime dependencies, pinned to the versions used to produce the results in
-# this repository (Python 3.11, Linux x86_64).
+# this repository (Python 3.11, Linux x86_64). CI also tests them on Python 3.12 and 3.13.
 numpy==2.4.6
 pandas==3.0.6
 scikit-learn==1.9.1
