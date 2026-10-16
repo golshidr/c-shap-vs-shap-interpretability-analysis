@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cshap"
-version = "0.2.0"
+version = "1.0.0"
 description = "C-SHAP-style clustered backgrounds for Kernel SHAP, with an evaluation suite against exact SHAP references."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -34,6 +34,10 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6"]
 notebooks = ["jupyter", "nbconvert", "ipykernel"]
+
+[project.urls]
+Repository = "https://github.com/golshidr/c-shap-vs-shap-interpretability-analysis"
+Changelog = "https://github.com/golshidr/c-shap-vs-shap-interpretability-analysis/blob/main/CHANGELOG.md"
 
 [project.scripts]
 cshap = "cshap.cli:main"

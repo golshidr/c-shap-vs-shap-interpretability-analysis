@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+title: "C-SHAP vs SHAP: Interpretability Analysis"
+abstract: >-
+  A Python package and command-line tool (cshap) for Kernel SHAP with K-means
+  centroid (C-SHAP-style) backgrounds, and an evaluation of the method against
+  exact SHAP values on three public datasets and three model families.
+authors:
+  - given-names: Golshid
+    family-names: Ranjbaran
+    affiliation: University of Saskatchewan
+version: 1.0.0
+date-released: "2026-10-16"
+license: MIT
+repository-code: "https://github.com/golshidr/c-shap-vs-shap-interpretability-analysis"
+keywords:
+  - explainable AI
+  - SHAP
+  - Kernel SHAP
+  - K-means
+  - interpretability
