@@ -1,0 +1,7 @@
+l1_reg,method,label,background_rows,background_fit_s,explain_s,total_s,nonzero_per_instance,vs_exact_inst_rel_l1,vs_exact_inst_spearman,vs_exact_inst_top5,vs_exact_global_pearson,vs_exact_global_spearman,vs_exact_global_top10,nb_pearson_standard_vs_cshap,nb_mad_standard_vs_cshap
+shap-default,standard,Standard SHAP (100 random rows),100,0.00112745,15.8559,15.857,10,0.381567,0.814314,0.9,0.987947,0.967465,0.9,0.996576,0.00106942
+shap-default,cshap,C-SHAP (20 K-means centroids),20,0.0471054,3.13208,3.17918,10,0.477737,0.804345,0.91,0.990781,0.953778,0.9,0.996576,0.00106942
+shap-default,random20,20 random rows (size-matched control),20,0.000613801,3.18737,3.18798,10,0.432761,0.795079,0.86,0.986068,0.979797,1,0.996576,0.00106942
+none,standard,Standard SHAP (100 random rows),100,0.00112745,14.1611,14.1622,30,0.0694755,0.972836,0.95,0.999656,0.995106,0.9,0.998733,0.000822361
+none,cshap,C-SHAP (20 K-means centroids),20,0.0471054,3.03315,3.08025,30,0.308952,0.919755,0.88,0.997946,0.990656,0.9,0.998733,0.000822361
+none,random20,20 random rows (size-matched control),20,0.000613801,3.05332,3.05393,30,0.20538,0.915462,0.86,0.995924,0.982202,1,0.998733,0.000822361

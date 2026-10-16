@@ -1,0 +1,8 @@
+# Development / notebook extras (tested versions).
+-r requirements.txt
+pytest==9.1.1
+ruff==0.17.1
+jupyter==1.1.1
+nbconvert==7.17.2
+nbformat==5.11.1
+ipykernel==7.4.0

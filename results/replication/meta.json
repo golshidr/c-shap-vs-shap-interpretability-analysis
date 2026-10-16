@@ -1,0 +1,7 @@
+{
+  "accuracy": 0.956140350877193,
+  "n_explain": 20,
+  "n_train": 455,
+  "shap_version": "0.51.0",
+  "exact_reference_s": 0.8993684947490692
+}

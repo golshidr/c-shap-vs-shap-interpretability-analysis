@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main, extension]
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest==9.1.1 ruff==0.17.1
+          pip install -e . --no-deps
+      - name: Lint
+        run: ruff check src tests scripts
+      - name: Unit tests
+        run: pytest
+      - name: Smoke run (breast cancer only, no downloads)
+        run: python -m cshap.cli run all --config configs/smoke.yaml

@@ -1,0 +1,46 @@
+# Tiny configuration for CI and quick local checks (~1 minute on a laptop).
+results_dir: results_smoke
+figures_dir: results_smoke/figures
+reports_dir: results_smoke/reports
+data_dir: data/raw
+n_jobs: 2
+
+datasets: [breast_cancer]
+models: [rf, logreg]
+split: {test_size: 0.2, seed: 42}
+
+replicate:
+  dataset: breast_cancer
+  n_explain: 3
+  standard_size: 30
+  k: 5
+  seed: 42
+  l1_settings: ["num_features(10)", false]
+
+sweep:
+  max_reference: 200
+  n_explain: 10
+  sizes: [5, 20]
+  methods: [random, kmeans, kmeans_weighted]
+  seeds: 2
+
+kernel:
+  max_reference: 200
+  n_explain: 4
+  sizes: [5, 20]
+  methods: [random, kmeans, kmeans_weighted]
+  seeds: 2
+  nsamples: 200
+  l1_reg: false
+
+faithfulness:
+  size: 5
+  standard_size: 20
+  n_draws: 8
+
+runtime:
+  max_reference: 200
+  model: rf
+  sizes: [5, 20]
+  n_explain: 1
+  kmeans_rows: [200]

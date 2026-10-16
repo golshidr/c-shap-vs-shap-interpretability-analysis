@@ -1,0 +1,31 @@
+feature,exact_full_background,standard,cshap,random20
+mean radius,-0.0265718,-0.0354611,-0.031417,-0.0279264
+mean texture,-0.015958,0,0,0
+mean perimeter,-0.0229001,0,-0.0313678,0
+mean area,-0.0319684,-0.0408417,-0.0349341,-0.0369633
+mean smoothness,-0.00383347,0,0,0
+mean compactness,-0.00645254,0,0,0
+mean concavity,-0.0325121,-0.0429719,-0.0305211,-0.0370317
+mean concave points,-0.0417861,-0.0498478,-0.0364611,-0.0436814
+mean symmetry,-0.00164407,0,0,0
+mean fractal dimension,-0.000481545,0,0,0
+radius error,-0.0137996,0,0,0
+texture error,-0.00208346,0,0,0
+perimeter error,-0.0182849,0,0,0
+area error,-0.0370207,-0.0520074,-0.0328588,-0.0466174
+smoothness error,-0.00113865,0,0,0
+compactness error,0.00360533,0,0,0
+concavity error,-0.0019721,0,0,0
+concave points error,-0.00137421,0,0,0
+symmetry error,-0.000490123,0,0,0
+fractal dimension error,0.000127538,0,0,0
+worst radius,-0.0726298,-0.0834222,-0.0733557,-0.0792382
+worst texture,-0.0211301,0,0,0
+worst perimeter,-0.0742637,-0.0868894,-0.0745811,-0.0871807
+worst area,-0.087054,-0.0989545,-0.0870674,-0.095965
+worst smoothness,-0.0014439,0,0,0
+worst compactness,-0.0082378,0,0,0
+worst concavity,-0.0247297,-0.0321381,0,-0.0284052
+worst concave points,-0.0764861,-0.084966,-0.0666858,-0.0777408
+worst symmetry,-0.00182005,0,0,0
+worst fractal dimension,-0.0016768,0,0,0

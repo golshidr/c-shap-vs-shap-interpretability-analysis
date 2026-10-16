@@ -1,0 +1,47 @@
+# Full configuration used for the results in the README.
+# Run with: cshap run all --config configs/default.yaml   (or: make reproduce)
+results_dir: results
+figures_dir: figures
+reports_dir: reports
+data_dir: data/raw
+n_jobs: 24
+
+datasets: [breast_cancer, magic, spambase]
+models: [rf, gbm, logreg]
+split: {test_size: 0.2, seed: 42}
+
+replicate:            # the original notebook setup
+  dataset: breast_cancer
+  n_explain: 20
+  standard_size: 100
+  k: 20
+  seed: 42
+  l1_settings: ["num_features(10)", false]
+
+sweep:                # exact SHAP, background-compression error only
+  max_reference: 1000
+  n_explain: 100
+  sizes: [5, 10, 20, 50, 100, 200]
+  methods: [random, kmeans, kmeans_weighted]
+  seeds: 10
+
+kernel:               # end-to-end Kernel SHAP
+  max_reference: 1000
+  n_explain: 50
+  sizes: [10, 20, 50, 100]
+  methods: [random, kmeans, kmeans_weighted]
+  seeds: 3
+  nsamples: auto
+  l1_reg: false
+
+faithfulness:
+  size: 20
+  standard_size: 100
+  n_draws: 32
+
+runtime:
+  max_reference: 2000
+  model: rf
+  sizes: [5, 10, 20, 50, 100, 200, 500, 1000]
+  n_explain: 3
+  kmeans_rows: [500, 1000, 2000, 5000, 10000]

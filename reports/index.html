@@ -1,0 +1,1235 @@
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>C-SHAP vs SHAP Report</title><style>
+:root { --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --rule:#e1e0d9; --bg:#fcfcfb; --accent:#2a78d6; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781; --rule:#2c2c2a; --bg:#1a1a19; --accent:#3987e5; }
+  :root:not([data-theme="light"]) img { background:#fff; }
+}
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+main { max-width:1080px; margin:0 auto; padding:24px 16px 64px; }
+h1 { font-size:1.7rem; margin:0.2em 0; } h2 { font-size:1.25rem; margin-top:2.2em; border-bottom:1px solid var(--rule); padding-bottom:4px; }
+h3 { font-size:1.05rem; margin-top:1.6em; }
+p, li { color:var(--ink2); max-width:78ch; }
+.meta { color:var(--muted); font-size:0.9rem; }
+figure { margin:1.2em 0; } figure img { max-width:100%; height:auto; border:1px solid var(--rule); border-radius:4px; }
+figcaption { color:var(--muted); font-size:0.88rem; margin-top:4px; }
+.table-wrap { overflow-x:auto; }
+table { border-collapse:collapse; font-size:0.86rem; font-variant-numeric:tabular-nums; margin:0.6em 0; }
+th, td { padding:4px 10px; border-bottom:1px solid var(--rule); text-align:right; white-space:nowrap; }
+th { color:var(--ink2); font-weight:600; } td:first-child, th:first-child { text-align:left; }
+nav a { color:var(--accent); margin-right:14px; text-decoration:none; font-size:0.92rem; }
+code { font-size:0.9em; }
+</style></head><body><main>
+<h1>C-SHAP vs SHAP: evaluation report</h1>
+<p class='meta'>Generated 2026-10-15 by <code>cshap report</code> from <code>results/</code>. Every number below is read from the result CSVs.</p>
+<nav><a href='#rep'>Replication</a><a href='#sweep'>Compression error</a><a href='#kernel'>Kernel SHAP</a><a href='#faith'>Faithfulness</a><a href='#stab'>Stability</a><a href='#runtime'>Runtime</a></nav>
+<h2 id='rep'>1. Replication of the original notebook</h2>
+<p>Breast Cancer, random forest, 20 test instances, Kernel SHAP on <code>predict_proba</code>. <code>vs_exact</code> columns compare against exact interventional SHAP with the full training background.</p>
+<div class="table-wrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>l1_reg</th>
+      <th>label</th>
+      <th>background_rows</th>
+      <th>total_s</th>
+      <th>nonzero_per_instance</th>
+      <th>vs_exact_inst_rel_l1</th>
+      <th>vs_exact_inst_spearman</th>
+      <th>vs_exact_global_pearson</th>
+      <th>nb_pearson_standard_vs_cshap</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>shap-default</td>
+      <td>Standard SHAP (100 random rows)</td>
+      <td>100</td>
+      <td>15.857</td>
+      <td>10</td>
+      <td>0.382</td>
+      <td>0.814</td>
+      <td>0.988</td>
+      <td>0.997</td>
+    </tr>
+    <tr>
+      <td>shap-default</td>
+      <td>C-SHAP (20 K-means centroids)</td>
+      <td>20</td>
+      <td>3.179</td>
+      <td>10</td>
+      <td>0.478</td>
+      <td>0.804</td>
+      <td>0.991</td>
+      <td>0.997</td>
+    </tr>
+    <tr>
+      <td>shap-default</td>
+      <td>20 random rows (size-matched control)</td>
+      <td>20</td>
+      <td>3.188</td>
+      <td>10</td>
+      <td>0.433</td>
+      <td>0.795</td>
+      <td>0.986</td>
+      <td>0.997</td>
+    </tr>
+    <tr>
+      <td>none</td>
+      <td>Standard SHAP (100 random rows)</td>
+      <td>100</td>
+      <td>14.162</td>
+      <td>30</td>
+      <td>0.069</td>
+      <td>0.973</td>
+      <td>1.000</td>
+      <td>0.999</td>
+    </tr>
+    <tr>
+      <td>none</td>
+      <td>C-SHAP (20 K-means centroids)</td>
+      <td>20</td>
+      <td>3.080</td>
+      <td>30</td>
+      <td>0.309</td>
+      <td>0.920</td>
+      <td>0.998</td>
+      <td>0.999</td>
+    </tr>
+    <tr>
+      <td>none</td>
+      <td>20 random rows (size-matched control)</td>
+      <td>20</td>
+      <td>3.054</td>
+      <td>30</td>
+      <td>0.205</td>
+      <td>0.915</td>
+      <td>0.996</td>
+      <td>0.999</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="../figures/fig01_replication_runtime.png" alt="Runtime of the three backgrounds." loading="lazy"><figcaption>Runtime of the three backgrounds.</figcaption></figure>
+<figure><img src="../figures/fig02_replication_global_importance.png" alt="Global importance." loading="lazy"><figcaption>Global importance.</figcaption></figure>
+<figure><img src="../figures/fig03_replication_local_explanation.png" alt="Local explanation, test instance 0." loading="lazy"><figcaption>Local explanation, test instance 0.</figcaption></figure>
+<h2 id='sweep'>2. Background-compression error (exact SHAP)</h2>
+<p>Mean per-instance relative L1 error at k = 20 (100 instances x 10 seeds):</p>
+<div class="table-wrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>method</th>
+      <th>dataset</th>
+      <th>model</th>
+      <th>kmeans</th>
+      <th>kmeans_weighted</th>
+      <th>random</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>0.296</td>
+      <td>0.110</td>
+      <td>0.176</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>0.741</td>
+      <td>0.000</td>
+      <td>0.245</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>0.316</td>
+      <td>0.092</td>
+      <td>0.156</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>0.479</td>
+      <td>0.147</td>
+      <td>0.261</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>0.975</td>
+      <td>0.000</td>
+      <td>0.259</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>0.504</td>
+      <td>0.208</td>
+      <td>0.300</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>0.376</td>
+      <td>0.809</td>
+      <td>0.289</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>1.219</td>
+      <td>0.000</td>
+      <td>0.542</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>0.305</td>
+      <td>0.618</td>
+      <td>0.325</td>
+    </tr>
+  </tbody>
+</table></div>
+<h3>Paired Wilcoxon tests at k = 20 (Holm-adjusted over all k)</h3>
+<div class="table-wrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>dataset</th>
+      <th>model</th>
+      <th>method_a</th>
+      <th>method_b</th>
+      <th>mean_diff</th>
+      <th>frac_a_better</th>
+      <th>rank_biserial</th>
+      <th>p_holm</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>0.12</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>-0.066</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>-0.186</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>0.496</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>-0.245</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>-0.741</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>0.16</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>-0.0641</td>
+      <td>0.98</td>
+      <td>-0.998</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>-0.225</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>0.219</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>-0.114</td>
+      <td>0.99</td>
+      <td>-0.999</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>-0.332</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>0.716</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>-0.259</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>-0.975</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>0.204</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>-0.0916</td>
+      <td>0.91</td>
+      <td>-0.935</td>
+      <td>5.86e-15</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>-0.296</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>0.0865</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>0.519</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>0.433</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>0.677</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>-0.542</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>-1.22</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>kmeans</td>
+      <td>random</td>
+      <td>-0.0206</td>
+      <td>0.71</td>
+      <td>-0.648</td>
+      <td>1.09e-07</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>random</td>
+      <td>0.293</td>
+      <td>0.01</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>kmeans</td>
+      <td>0.313</td>
+      <td>0</td>
+      <td>1</td>
+      <td>6.31e-16</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="../figures/fig04_sweep_error_vs_k.png" alt="Error vs background size." loading="lazy"><figcaption>Error vs background size.</figcaption></figure>
+<figure><img src="../figures/fig05_sweep_rank_vs_k.png" alt="Rank agreement vs background size." loading="lazy"><figcaption>Rank agreement vs background size.</figcaption></figure>
+<figure><img src="../figures/fig06_background_mean_shift.png" alt="Shift of the background mean." loading="lazy"><figcaption>Shift of the background mean.</figcaption></figure>
+<h2 id='kernel'>3. End-to-end Kernel SHAP</h2>
+<p>k = 20, 50 instances x 3 seeds. <code>explain_s</code> is CPU seconds per instance measured while other jobs shared the machine.</p>
+<div class="table-wrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>dataset</th>
+      <th>model</th>
+      <th>method</th>
+      <th>explain_s</th>
+      <th>fit_s</th>
+      <th>total_rel_l1</th>
+      <th>background_rel_l1</th>
+      <th>sampling_rel_l1</th>
+      <th>total_spearman</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>kmeans</td>
+      <td>0.088</td>
+      <td>0.062</td>
+      <td>0.237</td>
+      <td>0.231</td>
+      <td>0.029</td>
+      <td>0.917</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>0.083</td>
+      <td>0.037</td>
+      <td>0.108</td>
+      <td>0.099</td>
+      <td>0.029</td>
+      <td>0.936</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>random</td>
+      <td>0.081</td>
+      <td>0.001</td>
+      <td>0.197</td>
+      <td>0.191</td>
+      <td>0.025</td>
+      <td>0.942</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>kmeans</td>
+      <td>0.046</td>
+      <td>0.086</td>
+      <td>0.601</td>
+      <td>0.601</td>
+      <td>0.000</td>
+      <td>0.745</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>0.053</td>
+      <td>0.144</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>random</td>
+      <td>0.052</td>
+      <td>0.001</td>
+      <td>0.192</td>
+      <td>0.192</td>
+      <td>0.000</td>
+      <td>0.922</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>kmeans</td>
+      <td>0.225</td>
+      <td>0.079</td>
+      <td>0.240</td>
+      <td>0.235</td>
+      <td>0.031</td>
+      <td>0.920</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>0.198</td>
+      <td>0.062</td>
+      <td>0.093</td>
+      <td>0.085</td>
+      <td>0.030</td>
+      <td>0.961</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>random</td>
+      <td>0.218</td>
+      <td>0.001</td>
+      <td>0.189</td>
+      <td>0.184</td>
+      <td>0.030</td>
+      <td>0.942</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>kmeans</td>
+      <td>0.026</td>
+      <td>0.109</td>
+      <td>0.490</td>
+      <td>0.490</td>
+      <td>0.000</td>
+      <td>0.794</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>0.032</td>
+      <td>0.124</td>
+      <td>0.158</td>
+      <td>0.158</td>
+      <td>0.000</td>
+      <td>0.931</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>random</td>
+      <td>0.031</td>
+      <td>0.001</td>
+      <td>0.203</td>
+      <td>0.203</td>
+      <td>0.000</td>
+      <td>0.903</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>kmeans</td>
+      <td>0.014</td>
+      <td>0.117</td>
+      <td>0.947</td>
+      <td>0.947</td>
+      <td>0.000</td>
+      <td>0.850</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>0.014</td>
+      <td>0.171</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>random</td>
+      <td>0.013</td>
+      <td>0.001</td>
+      <td>0.237</td>
+      <td>0.237</td>
+      <td>0.000</td>
+      <td>0.920</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>kmeans</td>
+      <td>0.261</td>
+      <td>0.073</td>
+      <td>0.512</td>
+      <td>0.512</td>
+      <td>0.000</td>
+      <td>0.765</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>0.256</td>
+      <td>0.114</td>
+      <td>0.207</td>
+      <td>0.207</td>
+      <td>0.000</td>
+      <td>0.890</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>random</td>
+      <td>0.288</td>
+      <td>0.001</td>
+      <td>0.251</td>
+      <td>0.251</td>
+      <td>0.000</td>
+      <td>0.886</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>kmeans</td>
+      <td>0.134</td>
+      <td>0.133</td>
+      <td>0.394</td>
+      <td>0.378</td>
+      <td>0.035</td>
+      <td>0.847</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>kmeans_weighted</td>
+      <td>0.128</td>
+      <td>0.098</td>
+      <td>0.837</td>
+      <td>0.812</td>
+      <td>0.047</td>
+      <td>0.767</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>random</td>
+      <td>0.128</td>
+      <td>0.001</td>
+      <td>0.283</td>
+      <td>0.272</td>
+      <td>0.025</td>
+      <td>0.820</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>kmeans</td>
+      <td>0.063</td>
+      <td>0.053</td>
+      <td>1.126</td>
+      <td>1.126</td>
+      <td>0.000</td>
+      <td>0.799</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>kmeans_weighted</td>
+      <td>0.052</td>
+      <td>0.095</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>1.000</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>random</td>
+      <td>0.060</td>
+      <td>0.001</td>
+      <td>0.607</td>
+      <td>0.607</td>
+      <td>0.000</td>
+      <td>0.714</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>kmeans</td>
+      <td>0.511</td>
+      <td>0.142</td>
+      <td>0.337</td>
+      <td>0.311</td>
+      <td>0.073</td>
+      <td>0.861</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>kmeans_weighted</td>
+      <td>0.502</td>
+      <td>0.123</td>
+      <td>0.644</td>
+      <td>0.612</td>
+      <td>0.077</td>
+      <td>0.814</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>random</td>
+      <td>0.457</td>
+      <td>0.001</td>
+      <td>0.280</td>
+      <td>0.261</td>
+      <td>0.060</td>
+      <td>0.846</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="../figures/fig07_error_decomposition.png" alt="Error decomposition." loading="lazy"><figcaption>Error decomposition.</figcaption></figure>
+<figure><img src="../figures/fig08_runtime_vs_error.png" alt="Runtime vs error." loading="lazy"><figcaption>Runtime vs error.</figcaption></figure>
+<h2 id='faith'>4. Deletion / insertion faithfulness</h2>
+<p>Insertion AUC minus deletion AUC (higher is better):</p>
+<div class="table-wrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>method</th>
+      <th>dataset</th>
+      <th>model</th>
+      <th>exact</th>
+      <th>kmeans</th>
+      <th>kmeans_weighted</th>
+      <th>random</th>
+      <th>random_k100</th>
+      <th>random_order</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>6.044</td>
+      <td>5.963</td>
+      <td>5.989</td>
+      <td>5.923</td>
+      <td>6.033</td>
+      <td>-0.041</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>7.856</td>
+      <td>7.112</td>
+      <td>7.856</td>
+      <td>7.620</td>
+      <td>7.823</td>
+      <td>-0.106</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>0.318</td>
+      <td>0.313</td>
+      <td>0.316</td>
+      <td>0.309</td>
+      <td>0.316</td>
+      <td>-0.006</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>2.791</td>
+      <td>2.643</td>
+      <td>2.759</td>
+      <td>2.742</td>
+      <td>2.781</td>
+      <td>0.005</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>2.308</td>
+      <td>1.929</td>
+      <td>2.308</td>
+      <td>2.220</td>
+      <td>2.309</td>
+      <td>-0.120</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>0.315</td>
+      <td>0.289</td>
+      <td>0.307</td>
+      <td>0.306</td>
+      <td>0.314</td>
+      <td>-0.005</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>4.771</td>
+      <td>4.665</td>
+      <td>4.435</td>
+      <td>4.671</td>
+      <td>4.753</td>
+      <td>0.103</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>13.352</td>
+      <td>12.428</td>
+      <td>13.352</td>
+      <td>12.281</td>
+      <td>13.101</td>
+      <td>-0.040</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>0.470</td>
+      <td>0.458</td>
+      <td>0.435</td>
+      <td>0.457</td>
+      <td>0.466</td>
+      <td>0.010</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="../figures/fig09_faithfulness_curves.png" alt="Faithfulness curves." loading="lazy"><figcaption>Faithfulness curves.</figcaption></figure>
+<figure><img src="../figures/fig10_faithfulness_summary.png" alt="Faithfulness summary." loading="lazy"><figcaption>Faithfulness summary.</figcaption></figure>
+<h2 id='stab'>5. Stability across seeds</h2>
+<figure><img src="../figures/fig11_stability_background.png" alt="Background-only stability." loading="lazy"><figcaption>Background-only stability.</figcaption></figure>
+<p>End-to-end Kernel SHAP, k = 20, mean pairwise per-instance Spearman:</p>
+<div class="table-wrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>method</th>
+      <th>dataset</th>
+      <th>model</th>
+      <th>kmeans</th>
+      <th>kmeans_weighted</th>
+      <th>random</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Gradient boosting</td>
+      <td>0.951</td>
+      <td>0.936</td>
+      <td>0.900</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Logistic regression</td>
+      <td>0.988</td>
+      <td>1.000</td>
+      <td>0.856</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Breast Cancer Wisconsin</td>
+      <td>Random forest</td>
+      <td>0.959</td>
+      <td>0.961</td>
+      <td>0.901</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Gradient boosting</td>
+      <td>0.976</td>
+      <td>0.976</td>
+      <td>0.870</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Logistic regression</td>
+      <td>0.971</td>
+      <td>1.000</td>
+      <td>0.897</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>MAGIC Gamma Telescope</td>
+      <td>Random forest</td>
+      <td>0.965</td>
+      <td>0.964</td>
+      <td>0.824</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Gradient boosting</td>
+      <td>0.816</td>
+      <td>0.750</td>
+      <td>0.780</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Logistic regression</td>
+      <td>0.874</td>
+      <td>1.000</td>
+      <td>0.712</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>Spambase</td>
+      <td>Random forest</td>
+      <td>0.851</td>
+      <td>0.847</td>
+      <td>0.773</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="../figures/fig12_stability_kernel.png" alt="End-to-end stability." loading="lazy"><figcaption>End-to-end stability.</figcaption></figure>
+<h2 id='runtime'>6. Runtime scaling (single core)</h2>
+<div class="table-wrap"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>dataset</th>
+      <th>k</th>
+      <th>n_features</th>
+      <th>full_background</th>
+      <th>explain_s_per_instance</th>
+      <th>kmeans_fit_s</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>5</td>
+      <td>30</td>
+      <td>False</td>
+      <td>0.137</td>
+      <td>0.033</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>10</td>
+      <td>30</td>
+      <td>False</td>
+      <td>0.132</td>
+      <td>0.028</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>20</td>
+      <td>30</td>
+      <td>False</td>
+      <td>0.205</td>
+      <td>0.029</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>50</td>
+      <td>30</td>
+      <td>False</td>
+      <td>0.425</td>
+      <td>0.066</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>100</td>
+      <td>30</td>
+      <td>False</td>
+      <td>0.984</td>
+      <td>0.132</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>200</td>
+      <td>30</td>
+      <td>False</td>
+      <td>1.937</td>
+      <td>0.200</td>
+    </tr>
+    <tr>
+      <td>Breast Cancer Wisconsin</td>
+      <td>455</td>
+      <td>30</td>
+      <td>True</td>
+      <td>4.174</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>5</td>
+      <td>10</td>
+      <td>False</td>
+      <td>0.083</td>
+      <td>0.027</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>10</td>
+      <td>10</td>
+      <td>False</td>
+      <td>0.133</td>
+      <td>0.037</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>20</td>
+      <td>10</td>
+      <td>False</td>
+      <td>0.239</td>
+      <td>0.073</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>50</td>
+      <td>10</td>
+      <td>False</td>
+      <td>0.507</td>
+      <td>0.135</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>100</td>
+      <td>10</td>
+      <td>False</td>
+      <td>0.974</td>
+      <td>0.228</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>200</td>
+      <td>10</td>
+      <td>False</td>
+      <td>2.067</td>
+      <td>0.504</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>500</td>
+      <td>10</td>
+      <td>False</td>
+      <td>5.128</td>
+      <td>1.136</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>1000</td>
+      <td>10</td>
+      <td>False</td>
+      <td>10.248</td>
+      <td>2.072</td>
+    </tr>
+    <tr>
+      <td>MAGIC Gamma Telescope</td>
+      <td>2000</td>
+      <td>10</td>
+      <td>True</td>
+      <td>20.841</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>5</td>
+      <td>57</td>
+      <td>False</td>
+      <td>0.122</td>
+      <td>0.053</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>10</td>
+      <td>57</td>
+      <td>False</td>
+      <td>0.196</td>
+      <td>0.080</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>20</td>
+      <td>57</td>
+      <td>False</td>
+      <td>0.408</td>
+      <td>0.118</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>50</td>
+      <td>57</td>
+      <td>False</td>
+      <td>0.950</td>
+      <td>0.224</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>100</td>
+      <td>57</td>
+      <td>False</td>
+      <td>2.025</td>
+      <td>0.396</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>200</td>
+      <td>57</td>
+      <td>False</td>
+      <td>4.080</td>
+      <td>0.710</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>500</td>
+      <td>57</td>
+      <td>False</td>
+      <td>10.850</td>
+      <td>1.336</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>1000</td>
+      <td>57</td>
+      <td>False</td>
+      <td>22.986</td>
+      <td>2.755</td>
+    </tr>
+    <tr>
+      <td>Spambase</td>
+      <td>2000</td>
+      <td>57</td>
+      <td>True</td>
+      <td>46.110</td>
+      <td>0.000</td>
+    </tr>
+  </tbody>
+</table></div>
+<figure><img src="../figures/fig13_runtime_scaling.png" alt="Runtime scaling." loading="lazy"><figcaption>Runtime scaling.</figcaption></figure>
+</main></body></html>
