@@ -1,4 +1,4 @@
-# Full configuration used for the results in the README.
+# Full configuration used for the results in docs/RESULTS.md.
 # Run with: cshap run all --config configs/default.yaml   (or: make reproduce)
 results_dir: results
 figures_dir: figures
